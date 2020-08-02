@@ -103,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7852928183907740871}
   - component: {fileID: 5096003541646806680}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Cactus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
