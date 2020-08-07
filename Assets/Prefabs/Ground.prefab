@@ -557,8 +557,8 @@ Transform:
   - {fileID: 2853192355233120866}
   - {fileID: 2853192357125247849}
   - {fileID: 2853192355946141116}
-  - {fileID: 2853192356340278786}
   - {fileID: 2853192356593650518}
+  - {fileID: 2853192356340278786}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -669,7 +669,7 @@ GameObject:
   - component: {fileID: 2853192355946141114}
   - component: {fileID: 2853192355946141113}
   m_Layer: 0
-  m_Name: Bottom
+  m_Name: South
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -744,7 +744,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2853192355946141112}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -762,7 +762,7 @@ GameObject:
   - component: {fileID: 2853192356340278784}
   - component: {fileID: 2853192356340278911}
   m_Layer: 0
-  m_Name: Left
+  m_Name: West
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -780,7 +780,7 @@ Transform:
   m_LocalScale: {x: 40, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 8626121682864324865}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 63, z: 0}
 --- !u!33 &2853192356340278785
 MeshFilter:
@@ -837,7 +837,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2853192356340278910}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -855,7 +855,7 @@ GameObject:
   - component: {fileID: 2853192356593650516}
   - component: {fileID: 2853192356593650515}
   m_Layer: 0
-  m_Name: Right
+  m_Name: East
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -873,7 +873,7 @@ Transform:
   m_LocalScale: {x: 40, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 8626121682864324865}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: -63, z: 0}
 --- !u!33 &2853192356593650517
 MeshFilter:
@@ -930,7 +930,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2853192356593650514}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -948,7 +948,7 @@ GameObject:
   - component: {fileID: 2853192357125247847}
   - component: {fileID: 2853192357125247846}
   m_Layer: 0
-  m_Name: Top
+  m_Name: North
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1023,7 +1023,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2853192357125247845}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

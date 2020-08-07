@@ -12,6 +12,8 @@ public class LevelGenerator : MonoBehaviour
     private int groundWidth = 100;
     private int groundHeight = 75;
 
+    private GameObject levels;
+
     private void Start()
     {
         CreateLevels(gridSize);
@@ -28,11 +30,11 @@ public class LevelGenerator : MonoBehaviour
 
     private void CreateLevels(int gridSize)
     {
-        GameObject levels = new GameObject();
+        levels = new GameObject();
         levels.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         levels.name = "Levels";
 
-        int size = (int) Mathf.Sqrt(gridSize);
+        int size = (int)Mathf.Sqrt(gridSize);
 
         Vector3 levelPosition;
 
@@ -62,6 +64,107 @@ public class LevelGenerator : MonoBehaviour
                 z += groundHeight;
             }
         }
+
+        Transform levelsTransform = levels.transform;
+        int levelCount = levelsTransform.childCount;
+
+        //Debug.Log("Level Count: " + levelCount);
+        foreach (Transform levelTransform in levelsTransform)
+        {
+            int objectCount = levelTransform.childCount - 1;
+            Debug.Log(levelTransform);
+            Debug.Log("Objects count: " + objectCount);
+
+            int cactusCount = 0;
+            int rockCount = 0;
+
+            foreach (Transform objectTransform in levelTransform)
+            {
+                string objectName = objectTransform.name.Trim().Replace("(Clone)", "");
+                //Debug.Log(objectTransform + " -> " + objectName);
+                switch (objectName)
+                {
+                    case "Cactus":
+                        cactusCount++;
+                        break;
+                    case "Rock":
+                        rockCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            Debug.Log("Cactus count: " + cactusCount + "\nRock count: " + rockCount);
+
+            // Vamo inventar umas regras
+            // 1°: Quantidade de objetos
+            // 2°: Verificar objeto (se tem cactus, se tem pedra)
+            // 3°: Quantidade de cada objeto
+            // 4°: Localidade de cada objeto
+            // 5°: Senão
+
+            bool isNorth = false;
+            bool isSouth = false;
+            bool isEast = false;
+            bool isWest = false;
+
+            if (objectCount == 1)
+            {
+                if (cactusCount > rockCount)
+                {
+                    
+                }
+                else
+                {
+
+                }
+            }
+            else if (objectCount == 2)
+            {
+                if (cactusCount == rockCount)
+                {
+
+                }
+                else if (cactusCount > 0)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            else if (objectCount == 3)
+            {
+                if (cactusCount == 3)
+                {
+
+                }
+                else if (rockCount == 3)
+                {
+
+                }
+                else if (cactusCount > rockCount)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                if (cactusCount == rockCount)
+                {
+
+                }
+                else if (cactusCount > rockCount)
+                {
+                    
+                }
+            }
+        }
     }
 
     private GameObject CreateLevel(Vector3 levelPosition)
@@ -72,11 +175,11 @@ public class LevelGenerator : MonoBehaviour
         instantiatedGround.transform.parent = level.transform;
 
         points = instantiatedGround.transform.GetChild(0).gameObject;
-        Debug.Log("points");
-        Debug.Log(points.transform.position);
+        //Debug.Log("points");
+        //Debug.Log(points.transform.position);
 
-        int objectQuantity = Random.Range(1, 4);
-        Debug.Log("objectQuantity: " + objectQuantity);
+        int objectQuantity = Random.Range(1, 5);
+        //Debug.Log("objectQuantity: " + objectQuantity);
 
         instantiatedObjects = CreateObjects(objectQuantity);
 
@@ -99,11 +202,11 @@ public class LevelGenerator : MonoBehaviour
             int objectPosition = Random.Range(0, objects.Length);
 
             Collider[] colliders = Physics.OverlapSphere(pointArray[pointPosition].position, 1f);
-            Debug.Log("Colliders Length: " + colliders.Length);
+            //Debug.Log("Colliders Length: " + colliders.Length);
 
             foreach(Collider collider in colliders)
             {
-                Debug.Log(collider);
+                //Debug.Log(collider);
             }
 
             while (colliders.Length > 1)
