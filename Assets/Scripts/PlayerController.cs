@@ -9,12 +9,47 @@ public class PlayerController : MonoBehaviour
     private bool groundedPlayer;
     private float gravityValue = -9.81f;
 
+    private LevelGenerator levelGenerator;
+
+    private int gridSize;
+    private int fullGridSize;
+    private int initialLevel;
+    private int actualLevel;
+
     private void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
+        levelGenerator = GameObject.FindGameObjectWithTag("GameController").GetComponent<LevelGenerator>();
+
+        gridSize = levelGenerator.gridSize;
+        fullGridSize = gridSize * gridSize;
+        initialLevel = (fullGridSize / 2) + 1;
+        actualLevel = getLevel();
     }
 
-    void Update()
+    private void Update()
+    {
+        move();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Colidiu com " + other.name);
+
+        switch (other.name)
+        {
+            case "North":
+                break;
+            case "South":
+                break;
+            case "East":
+                break;
+            case "West":
+                break;
+        }
+    }
+
+    private void move()
     {
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
@@ -32,5 +67,15 @@ public class PlayerController : MonoBehaviour
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    private int getLevel()
+    {
+        Vector3 playerPosition = gameObject.transform.position;
+
+        int x = Mathf.RoundToInt(playerPosition.x / levelGenerator.getGroundWidth());
+        int z = Mathf.RoundToInt(playerPosition.z / levelGenerator.getGroundHeight());
+
+        return initialLevel + x + (z * gridSize);
     }
 }
