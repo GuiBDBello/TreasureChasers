@@ -43,8 +43,8 @@ public class LevelGenerator : MonoBehaviour
 
         Vector3 levelPosition;
 
-        int i = 1;
-        while (i <= size)
+        int i = 0;
+        while (i < size)
         {
             int halfSize = (int)Mathf.Round((gridSize / 2));
             int x = -halfSize * groundWidth;
@@ -55,10 +55,8 @@ public class LevelGenerator : MonoBehaviour
                 for (int w = 0; w < gridSize; w++)
                 {
                     levelPosition = new Vector3(x, 0.0f, z);
-                    //Debug.Log(levelPosition);
 
                     GameObject level = CreateLevel(levelPosition);
-                    //level.transform.position = levelPosition;
                     level.name = "Level " + i;
                     level.transform.parent = levels.transform;
 
@@ -79,12 +77,8 @@ public class LevelGenerator : MonoBehaviour
         instantiatedGround.transform.parent = level.transform;
 
         points = instantiatedGround.transform.GetChild(0).gameObject;
-        //Debug.Log("points");
-        //Debug.Log(points.transform.position);
 
         int objectQuantity = Random.Range(1, 5);
-        //Debug.Log("objectQuantity: " + objectQuantity);
-
         instantiatedObjects = CreateObjects(objectQuantity);
 
         foreach (GameObject instantiatedObject in instantiatedObjects)
@@ -106,14 +100,6 @@ public class LevelGenerator : MonoBehaviour
             int objectPosition = Random.Range(0, objects.Length);
 
             Collider[] colliders = Physics.OverlapSphere(pointArray[pointPosition].position, 1f);
-            //Debug.Log("Colliders Length: " + colliders.Length);
-            
-            /*
-            foreach(Collider collider in colliders)
-            {
-                Debug.Log(collider);
-            }
-            */
 
             while (colliders.Length > 1)
             {

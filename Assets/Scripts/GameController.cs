@@ -6,9 +6,9 @@ public class GameController : MonoBehaviour
     private LevelGenerator levelGenerator;
     private GameObject levels;
     private GameObject player;
+    private Camera mainCamera;
 
     private int gridSize;
-    private int fullGridSize;
     private int initialLevel;
     private int actualLevel;
 
@@ -17,72 +17,71 @@ public class GameController : MonoBehaviour
         levelGenerator = gameObject.GetComponent<LevelGenerator>();
         levels = levelGenerator.GetLevels();
         player = GameObject.FindGameObjectWithTag(Tags.Player);
-
-        //GenerateDirections();
+        mainCamera = Camera.main;
 
         gridSize = levelGenerator.gridSize;
-        fullGridSize = gridSize * gridSize;
-        initialLevel = (fullGridSize / 2) + 1;
-    }
-
-    private void Update()
-    {
-        // TODO: Remove this Input
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GetLevel();
-        }
-    }
-
-    private int GetLevel()
-    {
-        Vector3 playerPosition = player.transform.position;
-
-        int x = Mathf.RoundToInt(playerPosition.x / levelGenerator.GetGroundWidth());
-        int z = Mathf.RoundToInt(playerPosition.z / levelGenerator.GetGroundHeight());
-
-        //Debug.Log(playerPosition + "\n" + x + "\n" + z + "\n" + initialLevel + "\n" + gridSize);
-
-        return initialLevel + x + (z * gridSize);
+        initialLevel = (gridSize * gridSize / 2);
     }
 
     public void CheckPlayerDirection(Collider other)
     {
-        string playerDirection = other.name;
+        Transform levelTransform = levels.transform.GetChild(GetLevelIndex());
 
-        int actualLevel = GetLevel();
-        Transform levelTransform = levels.transform.GetChild(actualLevel - 1);
-
-        string rightDirection = GetDirection(levelTransform);
-
-        if (playerDirection == rightDirection)
-        {
-            Debug.Log("ACERTÔ MIZERÁVIO");
-        }
+        if (other.name == GetRightDirection(levelTransform))
+            NextLevel(other.name, levelTransform.GetChild(0).position);
         else
-        {
-            Debug.Log("(É um país da oropa) ERROU!");
-        }
+            GameOver();
     }
 
-    private void GenerateDirections()
+    private int GetLevelIndex()
     {
-        Transform levelsTransform = levels.transform;
+        int levelPositionX = Mathf.RoundToInt(player.transform.position.x / levelGenerator.GetGroundWidth());
+        int levelPositionZ = Mathf.RoundToInt(player.transform.position.z / levelGenerator.GetGroundHeight());
 
-        //int levelCount = levelsTransform.childCount;
-        //Debug.Log("Level Count: " + levelCount);
-
-        foreach (Transform levelTransform in levelsTransform)
-        {
-            GetDirection(levelTransform);
-        }
+        return initialLevel + levelPositionX + (levelPositionZ * gridSize);
     }
 
-    private string GetDirection(Transform levelTransform)
+    private void NextLevel(string direction, Vector3 levelPosition)
+    {
+        Vector3 mainCameraPosition = mainCamera.transform.position;
+        Vector3 playerPosition = player.transform.position;
+
+        switch (direction)
+        {
+            case Directions.North:
+                mainCameraPosition.z += levelGenerator.GetGroundHeight();
+                playerPosition.z = levelPosition.z + levelGenerator.GetGroundHeight();
+                playerPosition.x = levelPosition.x;
+                break;
+            case Directions.South:
+                mainCameraPosition.z -= levelGenerator.GetGroundHeight();
+                playerPosition.z = levelPosition.z - levelGenerator.GetGroundHeight();
+                playerPosition.x = levelPosition.x;
+                break;
+            case Directions.East:
+                mainCameraPosition.x += levelGenerator.GetGroundWidth();
+                playerPosition.x = levelPosition.x + levelGenerator.GetGroundWidth();
+                playerPosition.z = levelPosition.z;
+                break;
+            case Directions.West:
+                mainCameraPosition.x -= levelGenerator.GetGroundWidth();
+                playerPosition.x = levelPosition.x - levelGenerator.GetGroundWidth();
+                playerPosition.z = levelPosition.z;
+                break;
+        }
+        CharacterController playerCharacterController = player.GetComponent<CharacterController>();
+        mainCamera.transform.position = mainCameraPosition;
+        playerCharacterController.enabled = false;
+        player.transform.position = playerPosition;
+        playerCharacterController.enabled = true;
+    }
+
+    private void GameOver()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+    private string GetRightDirection(Transform levelTransform)
     {
         int objectCount = levelTransform.childCount - 1;
 
@@ -92,7 +91,6 @@ public class GameController : MonoBehaviour
         foreach (Transform objectTransform in levelTransform)
         {
             string objectName = objectTransform.name.Trim().Replace("(Clone)", "");
-            //Debug.Log(objectTransform + " -> " + objectName);
             switch (objectName)
             {
                 case Objects.Cactus:
@@ -105,18 +103,8 @@ public class GameController : MonoBehaviour
                     break;
             }
         }
-        Debug.Log(levelTransform + "\nObjects count: " + objectCount + "\nCactus count: " + cactusCount + "\nRock count: " + rockCount);
 
         int logic = GetLogic(objectCount, cactusCount, rockCount);
-        /*
-        Debug.Log("Lógica " + logic);
-
-        Debug.Log(levelTransform + "\n" +
-            "Objects count: " + objectCount + "\n" +
-            "Cactus count: " + cactusCount + "\n" +
-            "Rock count: " + rockCount);
-        */
-
         switch (logic % 4)
         {
             case 0:
@@ -128,6 +116,7 @@ public class GameController : MonoBehaviour
             case 3:
                 return Directions.West;
         }
+        // Só pra não dar erro de compilação, nunca vai chegar aqui;
         return "";
     }
 
