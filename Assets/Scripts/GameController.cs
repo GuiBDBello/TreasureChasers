@@ -3,14 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
+    public GameObject treasure;
+
     private LevelGenerator levelGenerator;
     private GameObject levels;
     private GameObject player;
     private Camera mainCamera;
+    private UIController uiController;
 
     private int gridSize;
     private int initialLevel;
     private int actualLevel;
+
+    private int levelsCompleted;
+    private int levelsToWin;
 
     private void Start()
     {
@@ -21,6 +27,17 @@ public class GameController : MonoBehaviour
 
         gridSize = levelGenerator.gridSize;
         initialLevel = (gridSize * gridSize / 2);
+
+        levelsCompleted = 0;
+        levelsToWin = Mathf.RoundToInt(gridSize / 2);
+
+        uiController = GameObject.FindGameObjectWithTag(Tags.UI).GetComponent<UIController>();
+    }
+
+    private void Update()
+    {
+        if (levelsCompleted >= levelsToWin)
+            TreasureFound();
     }
 
     public void CheckPlayerDirection(Collider other)
@@ -74,6 +91,17 @@ public class GameController : MonoBehaviour
         playerCharacterController.enabled = false;
         player.transform.position = playerPosition;
         playerCharacterController.enabled = true;
+
+        levelsCompleted++;
+    }
+
+    private void TreasureFound()
+    {
+        levelsCompleted = 0;
+        player.GetComponent<PlayerController>().enabled = false;
+        uiController.Panel.SetActive(true);
+        Vector3 position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z + 5);
+        Instantiate(treasure, position, Quaternion.identity);
     }
 
     private void GameOver()
