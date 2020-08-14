@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class GameController : MonoBehaviour
     private int levelsCompleted;
     private int levelsToWin;
 
+    private int treasureMoney;
+    private Text treasureValueText;
+
     private void Start()
     {
         levelGenerator = gameObject.GetComponent<LevelGenerator>();
@@ -32,12 +36,24 @@ public class GameController : MonoBehaviour
         levelsToWin = Mathf.RoundToInt(gridSize / 2);
 
         uiController = GameObject.FindGameObjectWithTag(Tags.UI).GetComponent<UIController>();
+
+        treasureMoney = PlayerPrefs.GetInt("treasureMoney");
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            treasureValueText = GameObject.FindGameObjectWithTag(Tags.Score).GetComponent<Text>();
+            treasureValueText.text = "$ " + treasureMoney + ",00";
+        }
     }
 
     private void Update()
     {
         if (levelsCompleted >= levelsToWin)
             TreasureFound();
+    }
+
+    public bool GetGameOver()
+    {
+        return !player.GetComponent<PlayerController>().enabled;
     }
 
     public void CheckPlayerDirection(Collider other)
@@ -47,7 +63,10 @@ public class GameController : MonoBehaviour
         if (other.name == GetRightDirection(levelTransform))
             NextLevel(other.name, levelTransform.GetChild(0).position);
         else
-            GameOver();
+        {
+            string message = "You got lost in the Desert. You found your way back to the camp.";
+            GameOver(message);
+        }
     }
 
     private int GetLevelIndex()
@@ -99,14 +118,33 @@ public class GameController : MonoBehaviour
     {
         levelsCompleted = 0;
         player.GetComponent<PlayerController>().enabled = false;
+        uiController.Panel.transform.GetChild(0).GetComponent<Text>().text = "Congratulations, you have found a Treasure.";
         uiController.Panel.SetActive(true);
         Vector3 position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z + 5);
         Instantiate(treasure, position, Quaternion.identity);
+
+        switch (SceneManager.GetActiveScene().buildIndex)
+        {
+            case 1:
+                treasureMoney = PlayerPrefs.GetInt("treasureMoney") + 10000;
+                PlayerPrefs.SetInt("treasureMoney", treasureMoney);
+                break;
+            case 2:
+                treasureMoney = PlayerPrefs.GetInt("treasureMoney") + 25000;
+                PlayerPrefs.SetInt("treasureMoney", treasureMoney);
+                break;
+            case 3:
+                treasureMoney = PlayerPrefs.GetInt("treasureMoney") + 50000;
+                PlayerPrefs.SetInt("treasureMoney", treasureMoney);
+                break;
+        }
     }
 
-    private void GameOver()
+    public void GameOver(string message)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        player.GetComponent<PlayerController>().enabled = false;
+        uiController.Panel.transform.GetChild(0).GetComponent<Text>().text = message;
+        uiController.Panel.SetActive(true);
     }
 
     private string GetRightDirection(Transform levelTransform)

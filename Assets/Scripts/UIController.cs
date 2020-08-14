@@ -10,14 +10,14 @@ public class UIController : MonoBehaviour
         Panel.SetActive(false);
     }
 
-    public void StartGame()
+    public void ShowInstructions()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Panel.SetActive(true);
     }
 
-    public void QuitGame()
+    public void Return()
     {
-        Application.Quit();
+        Panel.SetActive(false);
     }
 
     public void RestartGame()
@@ -28,5 +28,10 @@ public class UIController : MonoBehaviour
     public void GoToMenu()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
